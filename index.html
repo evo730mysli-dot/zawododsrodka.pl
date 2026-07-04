@@ -27,6 +27,7 @@
     --elektryka: #ca8a04;
     --motoryzacja: #2563eb;
     --automatyka: #7c3aed;
+    --it: #0d9488;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,6 +52,38 @@
     justify-content: space-between;
     height: 64px;
     box-shadow: 0 2px 12px rgba(30,58,138,0.15);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  nav.scrolled {
+    background: #16306e;
+    box-shadow: 0 4px 22px rgba(30,58,138,0.3);
+  }
+
+  /* SCROLL ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag, .hero h1, .hero p, .search-wrap {
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .hero-tag { animation-delay: 0.05s; }
+  .hero h1 { animation-delay: 0.15s; }
+  .hero p { animation-delay: 0.28s; }
+  .search-wrap { animation-delay: 0.4s; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(.2,.8,.4,1), transform 0.7s cubic-bezier(.2,.8,.4,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-tag, .hero h1, .hero p, .search-wrap { animation: none; opacity: 1; }
+    .reveal, .reveal.visible { transition: none; opacity: 1; transform: none; }
+    .hero::before { transform: translateX(-50%) !important; }
   }
 
   .logo {
@@ -106,7 +139,7 @@
     content: '';
     position: absolute;
     bottom: -60px; left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(calc(var(--scroll, 0) * 0.06px));
     width: 700px; height: 200px;
     background: radial-gradient(ellipse, rgba(249,115,22,0.2) 0%, transparent 70%);
     pointer-events: none;
@@ -217,6 +250,7 @@
   .filter-btn[data-cat="Elektryka"].active { background: var(--elektryka); border-color: var(--elektryka); color: #fff; }
   .filter-btn[data-cat="Motoryzacja"].active { background: var(--motoryzacja); border-color: var(--motoryzacja); color: #fff; }
   .filter-btn[data-cat="Automatyka"].active { background: var(--automatyka); border-color: var(--automatyka); color: #fff; }
+  .filter-btn[data-cat="Informatyka"].active { background: var(--it); border-color: var(--it); color: #fff; }
 
   /* CARDS GRID */
   .cards-section {
@@ -260,6 +294,7 @@
   .card[data-cat="Elektryka"]::before { background: var(--elektryka); }
   .card[data-cat="Motoryzacja"]::before { background: var(--motoryzacja); }
   .card[data-cat="Automatyka"]::before { background: var(--automatyka); }
+  .card[data-cat="Informatyka"]::before { background: var(--it); }
 
   .card.has-link { cursor: pointer; }
   .card.has-link:hover {
@@ -451,7 +486,7 @@
   </div>
 </section>
 
-<div class="filters-section" id="zawody">
+<div class="filters-section reveal" id="zawody">
   <div class="filters-label">Filtruj wg branży</div>
   <div class="filters">
     <button class="filter-btn active" data-cat="Wszystkie">Wszystkie</button>
@@ -461,6 +496,7 @@
     <button class="filter-btn" data-cat="Elektryka">⚡ Elektryka</button>
     <button class="filter-btn" data-cat="Motoryzacja">🚗 Motoryzacja</button>
     <button class="filter-btn" data-cat="Automatyka">🤖 Automatyka</button>
+    <button class="filter-btn" data-cat="Informatyka">💻 Informatyka</button>
   </div>
 </div>
 
@@ -468,7 +504,7 @@
   <div class="cards-count" id="cards-count"></div>
   <div class="grid" id="grid">
 
-    <div class="card has-link" data-cat="Drewno" data-name="Stolarz" onclick="location.href='stolarz.html'">
+    <div class="card has-link reveal" data-cat="Drewno" data-name="Stolarz" onclick="location.href='stolarz.html'">
       <span class="card-emoji">🪚</span>
       <div class="card-name">Stolarz</div>
       <div class="card-cat">🪵 Drewno</div>
@@ -476,52 +512,87 @@
       <span class="card-arrow">→</span>
     </div>
 
-    <div class="card" data-cat="Motoryzacja" data-name="Mechanik samochodowy">
+    <div class="card reveal" data-cat="Motoryzacja" data-name="Mechanik samochodowy">
       <span class="card-emoji">🔧</span>
       <div class="card-name">Mechanik samochodowy</div>
       <div class="card-cat">🚗 Motoryzacja</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Elektryka" data-name="Elektryk">
+    <div class="card reveal" data-cat="Elektryka" data-name="Elektryk">
       <span class="card-emoji">⚡</span>
       <div class="card-name">Elektryk</div>
       <div class="card-cat">⚡ Elektryka</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Metal i CNC" data-name="Operator CNC">
+    <div class="card reveal" data-cat="Metal i CNC" data-name="Operator CNC">
       <span class="card-emoji">⚙️</span>
       <div class="card-name">Operator CNC</div>
       <div class="card-cat">⚙️ Metal i CNC</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Metal i CNC" data-name="Spawacz">
+    <div class="card reveal" data-cat="Metal i CNC" data-name="Spawacz">
       <span class="card-emoji">🔥</span>
       <div class="card-name">Spawacz</div>
       <div class="card-cat">⚙️ Metal i CNC</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Budownictwo" data-name="Murarz">
+    <div class="card reveal" data-cat="Budownictwo" data-name="Murarz">
       <span class="card-emoji">🧱</span>
       <div class="card-name">Murarz</div>
       <div class="card-cat">🧱 Budownictwo</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Budownictwo" data-name="Hydraulik">
+    <div class="card reveal" data-cat="Budownictwo" data-name="Hydraulik">
       <span class="card-emoji">🔩</span>
       <div class="card-name">Hydraulik</div>
       <div class="card-cat">🧱 Budownictwo</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
-    <div class="card" data-cat="Automatyka" data-name="Automatyk">
+    <div class="card reveal" data-cat="Automatyka" data-name="Automatyk">
       <span class="card-emoji">🤖</span>
       <div class="card-name">Automatyk</div>
       <div class="card-cat">🤖 Automatyka</div>
+      <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
+    </div>
+
+    <div class="card reveal" data-cat="Metal i CNC" data-name="Ślusarz">
+      <span class="card-emoji">🛠️</span>
+      <div class="card-name">Ślusarz</div>
+      <div class="card-cat">⚙️ Metal i CNC</div>
+      <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
+    </div>
+
+    <div class="card reveal" data-cat="Budownictwo" data-name="Płytkarz">
+      <span class="card-emoji">🔳</span>
+      <div class="card-name">Płytkarz</div>
+      <div class="card-cat">🧱 Budownictwo</div>
+      <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
+    </div>
+
+    <div class="card reveal" data-cat="Automatyka" data-name="Mechatronik">
+      <span class="card-emoji">🦾</span>
+      <div class="card-name">Mechatronik</div>
+      <div class="card-cat">🤖 Automatyka</div>
+      <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
+    </div>
+
+    <div class="card reveal" data-cat="Informatyka" data-name="Informatyk">
+      <span class="card-emoji">🖥️</span>
+      <div class="card-name">Informatyk</div>
+      <div class="card-cat">💻 Informatyka</div>
+      <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
+    </div>
+
+    <div class="card reveal" data-cat="Informatyka" data-name="Programista">
+      <span class="card-emoji">👨‍💻</span>
+      <div class="card-name">Programista</div>
+      <div class="card-cat">💻 Informatyka</div>
       <span class="card-status status-soon"><span class="status-dot"></span>Wkrótce</span>
     </div>
 
@@ -536,34 +607,34 @@
 
 <section class="about-section" id="o-projekcie">
   <div class="about-inner">
-    <div class="about-text">
+    <div class="about-text reveal">
       <h2>Po co to <span>wszystko?</span></h2>
       <p>Chcemy pokazać szkolną i zawodową stronę technikum i branżówki w taki sposób, żeby uczeń mógł z wyprzedzeniem wiedzieć, co go czeka — i czy to w ogóle jest dla niego.</p>
       <p>Każdy opis zawodu to realna wiedza: co robisz w pracy, ile zarabiasz, czy zawód ma przyszłość, i dla kogo absolutnie nie jest.</p>
       <p>Bez ściemy, bez reklam, bez PR-u. Tylko fakty.</p>
     </div>
-    <div class="about-stats">
+    <div class="about-stats reveal">
       <div class="stat-card">
-        <span class="stat-num">8</span>
+        <span class="stat-num" data-count="13">0</span>
         <div class="stat-label">zawodów w bazie</div>
       </div>
       <div class="stat-card">
-        <span class="stat-num">1</span>
+        <span class="stat-num" data-count="1">0</span>
         <div class="stat-label">w pełni opisany</div>
       </div>
       <div class="stat-card">
-        <span class="stat-num">6</span>
+        <span class="stat-num" data-count="7">0</span>
         <div class="stat-label">branż technicznych</div>
       </div>
       <div class="stat-card">
-        <span class="stat-num">0</span>
+        <span class="stat-num" data-count="0">0</span>
         <div class="stat-label">reklam i ściemy</div>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
+<footer class="reveal">
   <div class="footer-logo">zawód<span>od środka</span>.pl</div>
   <p>Baza wiedzy dla uczniów szkół technicznych i branżowych. Projekt niekomercyjny.</p>
 </footer>
@@ -617,6 +688,67 @@
   });
 
   updateCards();
+
+  // --- scroll-driven "life": navbar shadow + hero parallax ---
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const navbar = document.getElementById('navbar');
+  let ticking = false;
+
+  function onScroll() {
+    if (!reduceMotion) {
+      document.documentElement.style.setProperty('--scroll', window.scrollY);
+    }
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  // --- scroll reveal for sections & cards (staggered) ---
+  const revealEls = document.querySelectorAll('.reveal');
+  cards.forEach((card, i) => {
+    card.style.transitionDelay = reduceMotion ? '0ms' : `${Math.min(i * 60, 480)}ms`;
+  });
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  // --- counter animation for stats ---
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count, 10);
+    if (isNaN(target)) return;
+    if (reduceMotion) { el.textContent = target; return; }
+    const duration = 900;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      el.textContent = Math.floor(p * target);
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        countObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.stat-num[data-count]').forEach(el => countObserver.observe(el));
 </script>
 </body>
 </html>

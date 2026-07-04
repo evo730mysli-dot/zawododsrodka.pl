@@ -38,6 +38,37 @@
     justify-content: space-between;
     height: 64px;
     box-shadow: 0 2px 12px rgba(30,58,138,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  nav.scrolled {
+    background: #16306e;
+    box-shadow: 0 4px 22px rgba(30,58,138,0.3);
+  }
+
+  /* SCROLL ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-info h1, .badges { opacity: 0; animation: fadeUp 0.7s ease forwards; }
+  .hero-info h1 { animation-delay: 0.1s; }
+  .badges { animation-delay: 0.25s; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(.2,.8,.4,1), transform 0.7s cubic-bezier(.2,.8,.4,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-info h1, .badges { animation: none; opacity: 1; }
+    .reveal, .reveal.visible { transition: none; opacity: 1; transform: none; }
+    .hero::before, .hero::after { animation: none; }
+    .hero-photo { transition: none !important; transform: none !important; }
   }
   .logo {
     font-size: 1.25rem;
@@ -71,8 +102,26 @@
     width: 300px; height: 300px;
     background: radial-gradient(ellipse, rgba(249,115,22,0.18) 0%, transparent 65%);
     pointer-events: none;
+    animation: driftA 14s ease-in-out infinite;
   }
-  .hero-inner { max-width: 860px; margin: 0 auto; }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -70px; left: -50px;
+    width: 260px; height: 260px;
+    background: radial-gradient(ellipse, rgba(180,83,9,0.3) 0%, transparent 65%);
+    pointer-events: none;
+    animation: driftB 18s ease-in-out infinite;
+  }
+  @keyframes driftA {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-24px, -18px); }
+  }
+  @keyframes driftB {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(18px, 22px); }
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
 
   .breadcrumb {
     font-size: 0.78rem;
@@ -88,6 +137,21 @@
     gap: 1.5rem;
     flex-wrap: wrap;
   }
+  .hero-photo {
+    width: 92px; height: 92px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.25);
+    box-shadow: 0 0 0 4px rgba(180,83,9,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    will-change: transform;
+  }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-photo .hero-emoji { font-size: 3rem; }
   .hero-emoji { font-size: 4rem; line-height: 1; flex-shrink: 0; }
   .hero-info { flex: 1; min-width: 200px; }
   .hero-info h1 {
@@ -136,7 +200,7 @@
     transition: color 0.2s, border-color 0.2s;
   }
   .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn.active { color: var(--drewno); border-bottom-color: var(--drewno); }
 
   .content {
     max-width: 860px;
@@ -164,6 +228,7 @@
     gap: 0.75rem;
     background: var(--card);
     border: 1.5px solid var(--border);
+    border-left: 3px solid var(--drewno);
     border-radius: 10px;
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
@@ -203,11 +268,51 @@
   .praktyki-item {
     background: var(--card);
     border: 1.5px solid var(--border);
+    border-left: 3px solid var(--drewno);
     border-radius: 10px;
     padding: 0.85rem 1rem;
     font-size: 0.85rem;
   }
   .praktyki-item .pi-icon { font-size: 1.3rem; margin-bottom: 0.3rem; display: block; }
+
+  .praca-layout {
+    display: grid;
+    grid-template-columns: minmax(180px, 260px) 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .praca-photo {
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--subtext);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .praca-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .kariera-photo {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    min-height: 180px;
+    margin-bottom: 1.75rem;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--subtext);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 1rem;
+  }
+  .kariera-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .day-timeline { position: relative; padding-left: 1.5rem; }
   .day-timeline::before {
@@ -225,10 +330,10 @@
     left: -0.45rem; top: 0.35rem;
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--drewno);
     border: 2px solid var(--bg);
   }
-  .day-time { font-size: 0.75rem; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 0.15rem; }
+  .day-time { font-size: 0.75rem; font-weight: 700; color: var(--drewno); letter-spacing: 0.5px; margin-bottom: 0.15rem; }
   .day-desc { font-size: 0.9rem; font-weight: 500; }
 
   .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
@@ -266,8 +371,8 @@
     width: 36px; height: 36px;
     border-radius: 50%;
     background: #fff;
-    border: 2px solid var(--accent);
-    color: var(--accent);
+    border: 2px solid var(--drewno);
+    color: var(--drewno);
     font-size: 0.85rem;
     font-weight: 800;
     display: flex;
@@ -306,9 +411,12 @@
 
   @media (max-width: 600px) {
     .hero-emoji { font-size: 3rem; }
+    .hero-photo { width: 72px; height: 72px; }
+    .hero-photo .hero-emoji { font-size: 2.2rem; }
     .pros-cons { grid-template-columns: 1fr; }
     .tab-btn { padding: 0.85rem 1rem; font-size: 0.82rem; }
     .praktyki-grid { grid-template-columns: 1fr 1fr; }
+    .praca-layout { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -325,7 +433,10 @@
       <a href="index.html">Główna</a> / <a href="index.html#zawody">Zawody</a> / Stolarz
     </div>
     <div class="hero-top">
-      <div class="hero-emoji">🪚</div>
+      <div class="hero-photo">
+        <!-- <img src="stolarz-portret.jpg" alt="Stolarz przy pracy"> -->
+        <span class="hero-emoji">🪚</span>
+      </div>
       <div class="hero-info">
         <h1>Stolarz</h1>
         <div class="badges">
@@ -348,7 +459,7 @@
 
   <div class="tab-panel active" id="tab-szkola">
     <div class="section-label">Przedmioty zawodowe</div>
-    <div class="subjects-list">
+    <div class="subjects-list reveal">
       <div class="subject-item"><span class="sub-icon">📐</span> Technologia drewna i materiałów drzewnych</div>
       <div class="subject-item"><span class="sub-icon">🔩</span> Obróbka ręczna i maszynowa drewna</div>
       <div class="subject-item"><span class="sub-icon">✏️</span> Rysunek techniczny i dokumentacja techniczna</div>
@@ -358,7 +469,7 @@
     </div>
 
     <div class="section-label">Jak ważne są przedmioty ogólne?</div>
-    <div class="bars">
+    <div class="bars reveal">
       <div class="bar-item">
         <div class="bar-top"><span class="bar-label">📐 Matematyka</span><span class="bar-pct">70%</span></div>
         <div class="bar-track"><div class="bar-fill" style="width:70%"></div></div>
@@ -374,7 +485,7 @@
     </div>
 
     <div class="section-label" style="margin-top:2rem">Czego uczysz się na praktykach?</div>
-    <div class="praktyki-grid">
+    <div class="praktyki-grid reveal">
       <div class="praktyki-item"><span class="pi-icon">🔧</span> Obsługa maszyn stolarskich (piły, strugarki, frezarki)</div>
       <div class="praktyki-item"><span class="pi-icon">📏</span> Pomiar i cięcie elementów wg projektu</div>
       <div class="praktyki-item"><span class="pi-icon">🪚</span> Sklejanie, łączenie, montaż wyrobów</div>
@@ -386,7 +497,12 @@
 
   <div class="tab-panel" id="tab-praca">
     <div class="section-label">Typowy dzień pracy</div>
-    <div class="day-timeline">
+    <div class="praca-layout reveal">
+      <div class="praca-photo">
+        <!-- <img src="stolarz-przy-pracy-1.jpg" alt="Stolarz przy pracy w warsztacie"> -->
+        📷 Zdjęcie: stolarz przy pracy
+      </div>
+      <div class="day-timeline">
       <div class="day-item">
         <div class="day-time">6:00 – 7:00</div>
         <div class="day-desc">Przyjazd do zakładu, sprawdzenie planu produkcji na dziś, przygotowanie maszyn i materiałów.</div>
@@ -411,10 +527,11 @@
         <div class="day-time">13:30 – 15:00</div>
         <div class="day-desc">Szlifowanie, lakierowanie lub bejcowanie gotowych elementów. Kontrola jakości, sprzątanie stanowiska.</div>
       </div>
+      </div>
     </div>
 
     <div class="section-label">Plusy i minusy</div>
-    <div class="pros-cons">
+    <div class="pros-cons reveal">
       <div class="pros-card">
         <div class="pc-header">Plusy</div>
         <ul class="pc-list">
@@ -439,7 +556,7 @@
     </div>
 
     <div class="section-label">Dla kogo NIE jest ten zawód?</div>
-    <div class="not-for-you">
+    <div class="not-for-you reveal">
       <h3>🚫 Ten zawód nie jest dla Ciebie, jeśli…</h3>
       <ul>
         <li>Jesteś uczulony na pył drzewny lub masz astmę — alergeny są na co dzień</li>
@@ -452,8 +569,12 @@
   </div>
 
   <div class="tab-panel" id="tab-kariera">
+    <div class="kariera-photo reveal">
+      <!-- <img src="stolarz-wlasny-warsztat.jpg" alt="Stolarz prowadzący własny warsztat"> -->
+      📷 Zdjęcie: ścieżka kariery stolarza
+    </div>
     <div class="section-label">Ścieżka kariery i zarobki</div>
-    <div class="career-steps">
+    <div class="career-steps reveal">
       <div class="career-step">
         <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
         <div class="step-body">
@@ -497,7 +618,7 @@
     </div>
 
     <div class="section-label">Przyszłość zawodu</div>
-    <div class="future-card">
+    <div class="future-card reveal">
       <h3>Jak stabilny jest ten zawód?</h3>
       <div class="future-rating">
         <span class="stars">★★★★☆</span>
@@ -529,6 +650,67 @@
       setTimeout(() => bar.style.width = target, 200);
     });
   });
+
+  // --- navbar shadow on scroll (whole-page "life") ---
+  const nav = document.querySelector('nav');
+  let ticking = false;
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+    ticking = false;
+  }
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, { passive: true });
+  onScroll();
+
+  // --- scroll reveal for content blocks (also re-checks when switching tabs) ---
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById('tab-' + btn.dataset.tab);
+      const els = Array.from(panel.querySelectorAll('.reveal:not(.visible)'));
+      els.forEach((el, i) => {
+        el.style.transitionDelay = reduceMotion ? '0ms' : `${i * 90}ms`;
+      });
+      void panel.offsetHeight;
+      requestAnimationFrame(() => {
+        els.forEach(el => {
+          el.classList.add('visible');
+          revealObserver.unobserve(el);
+        });
+      });
+    });
+  });
+
+  // --- subtle 3D tilt on hero photo (desktop pointer only) ---
+  const heroPhoto = document.querySelector('.hero-photo');
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (heroPhoto && canHover && !reduceMotion) {
+    heroPhoto.style.transition = 'transform 0.15s ease';
+    heroPhoto.addEventListener('mousemove', (e) => {
+      const rect = heroPhoto.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      heroPhoto.style.transform = `perspective(300px) rotateX(${y * -16}deg) rotateY(${x * 16}deg) scale(1.06)`;
+    });
+    heroPhoto.addEventListener('mouseleave', () => {
+      heroPhoto.style.transform = '';
+    });
+  }
 </script>
 </body>
 </html>
