@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stolarz — zawódodśrodka.pl</title>
+<style>
+  :root {
+    --bg: #f8f9fc;
+    --bg2: #ffffff;
+    --card: #ffffff;
+    --border: #dde3f0;
+    --accent: #f97316;
+    --blue: #1e3a8a;
+    --blue-mid: #2563eb;
+    --text: #111827;
+    --subtext: #6b7280;
+    --green: #059669;
+    --red: #dc2626;
+    --drewno: #b45309;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  nav {
+    background: var(--blue);
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 12px rgba(30,58,138,0.15);
+  }
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    text-decoration: none;
+    color: #fff;
+  }
+  .logo span { color: var(--accent); }
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: #fff; }
+
+  .hero {
+    background: linear-gradient(160deg, var(--blue) 0%, #1e40af 60%, #2563eb 100%);
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(ellipse, rgba(249,115,22,0.18) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; }
+
+  .breadcrumb {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1.5rem;
+  }
+  .breadcrumb a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+
+  .hero-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-emoji { font-size: 4rem; line-height: 1; flex-shrink: 0; }
+  .hero-info { flex: 1; min-width: 200px; }
+  .hero-info h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+    color: #fff;
+  }
+  .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1.5px solid transparent;
+  }
+  .badge-cat { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); color: #fff; }
+  .badge-ready { background: rgba(5,150,105,0.2); border-color: rgba(5,150,105,0.4); color: #6ee7b7; }
+  .badge-zkz { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); }
+
+  .tabs-nav {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    overflow-x: auto;
+    background: #fff;
+  }
+  .tab-btn {
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: none;
+    border: none;
+    color: var(--subtext);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--subtext);
+    margin-bottom: 0.75rem;
+    margin-top: 2.5rem;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  .subjects-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .subject-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .subject-item .sub-icon { font-size: 1.2rem; }
+
+  .bars { display: flex; flex-direction: column; gap: 0.85rem; }
+  .bar-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.35rem;
+  }
+  .bar-label { font-size: 0.85rem; font-weight: 600; }
+  .bar-pct { font-size: 0.78rem; color: var(--subtext); font-weight: 700; }
+  .bar-track {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--accent);
+    transition: width 0.8s cubic-bezier(.2,.8,.4,1);
+  }
+  .bar-fill.medium { background: var(--blue-mid); }
+  .bar-fill.low { background: #9ca3af; }
+
+  .praktyki-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+  .praktyki-item {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-size: 0.85rem;
+  }
+  .praktyki-item .pi-icon { font-size: 1.3rem; margin-bottom: 0.3rem; display: block; }
+
+  .day-timeline { position: relative; padding-left: 1.5rem; }
+  .day-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+  .day-item { position: relative; padding: 0 0 1.5rem 1.5rem; }
+  .day-item::before {
+    content: '';
+    position: absolute;
+    left: -0.45rem; top: 0.35rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .day-time { font-size: 0.75rem; font-weight: 700; color: var(--accent); letter-spacing: 0.5px; margin-bottom: 0.15rem; }
+  .day-desc { font-size: 0.9rem; font-weight: 500; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pros-card, .cons-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+  }
+  .pros-card { border-top: 3px solid var(--green); }
+  .cons-card { border-top: 3px solid var(--red); }
+  .pc-header { font-size: 0.75rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1rem; }
+  .pros-card .pc-header { color: var(--green); }
+  .cons-card .pc-header { color: var(--red); }
+  .pc-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pc-list li { display: flex; gap: 0.5rem; font-size: 0.85rem; line-height: 1.4; }
+  .pros-card .pc-list li::before { content: '✓'; color: var(--green); flex-shrink: 0; }
+  .cons-card .pc-list li::before { content: '✕'; color: var(--red); flex-shrink: 0; }
+
+  .not-for-you {
+    background: #fff5f5;
+    border: 1.5px solid #fecaca;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+  }
+  .not-for-you h3 { color: var(--red); font-size: 0.9rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .not-for-you ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .not-for-you ul li { display: flex; gap: 0.5rem; font-size: 0.88rem; color: #6b7280; }
+  .not-for-you ul li::before { content: '🚫'; flex-shrink: 0; }
+
+  .career-steps { display: flex; flex-direction: column; }
+  .career-step { display: flex; gap: 1.25rem; }
+  .step-left { display: flex; flex-direction: column; align-items: center; width: 40px; flex-shrink: 0; }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-line { width: 2px; flex: 1; background: var(--border); margin: 6px 0; }
+  .career-step:last-child .step-line { display: none; }
+  .step-body { padding-bottom: 2rem; flex: 1; }
+  .career-step:last-child .step-body { padding-bottom: 0; }
+  .step-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.2rem; }
+  .step-desc { font-size: 0.85rem; color: var(--subtext); margin-bottom: 0.5rem; }
+  .step-salary {
+    display: inline-block;
+    background: rgba(5,150,105,0.1);
+    border: 1px solid rgba(5,150,105,0.2);
+    color: var(--green);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+  }
+
+  .future-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .future-card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 0.75rem; }
+  .future-rating { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+  .stars { font-size: 1.3rem; letter-spacing: 2px; }
+  .future-label { font-size: 0.85rem; font-weight: 700; color: var(--green); }
+  .future-card p { font-size: 0.88rem; color: var(--subtext); line-height: 1.7; }
+
+  @media (max-width: 600px) {
+    .hero-emoji { font-size: 3rem; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .tab-btn { padding: 0.85rem 1rem; font-size: 0.82rem; }
+    .praktyki-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">zawód<span>od środka</span>.pl</a>
+  <a href="index.html" class="back-link">← Wszystkie zawody</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Główna</a> / <a href="index.html#zawody">Zawody</a> / Stolarz
+    </div>
+    <div class="hero-top">
+      <div class="hero-emoji">🪚</div>
+      <div class="hero-info">
+        <h1>Stolarz</h1>
+        <div class="badges">
+          <span class="badge badge-cat">🪵 Drewno</span>
+          <span class="badge badge-ready">✓ Opisany</span>
+          <span class="badge badge-zkz">MEC.09 / ZKZ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs-nav">
+  <button class="tab-btn active" data-tab="szkola">🎓 Szkoła</button>
+  <button class="tab-btn" data-tab="praca">🔨 Praca</button>
+  <button class="tab-btn" data-tab="kariera">📈 Kariera</button>
+</div>
+
+<div class="content">
+
+  <div class="tab-panel active" id="tab-szkola">
+    <div class="section-label">Przedmioty zawodowe</div>
+    <div class="subjects-list">
+      <div class="subject-item"><span class="sub-icon">📐</span> Technologia drewna i materiałów drzewnych</div>
+      <div class="subject-item"><span class="sub-icon">🔩</span> Obróbka ręczna i maszynowa drewna</div>
+      <div class="subject-item"><span class="sub-icon">✏️</span> Rysunek techniczny i dokumentacja techniczna</div>
+      <div class="subject-item"><span class="sub-icon">🪑</span> Wykonywanie wyrobów stolarskich (meble, okna, schody)</div>
+      <div class="subject-item"><span class="sub-icon">🎨</span> Wykończenia powierzchni — lakierowanie, bejcowanie</div>
+      <div class="subject-item"><span class="sub-icon">🏭</span> Obsługa maszyn stolarskich i CNC</div>
+    </div>
+
+    <div class="section-label">Jak ważne są przedmioty ogólne?</div>
+    <div class="bars">
+      <div class="bar-item">
+        <div class="bar-top"><span class="bar-label">📐 Matematyka</span><span class="bar-pct">70%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:70%"></div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-top"><span class="bar-label">⚗️ Fizyka</span><span class="bar-pct">40%</span></div>
+        <div class="bar-track"><div class="bar-fill medium" style="width:40%"></div></div>
+      </div>
+      <div class="bar-item">
+        <div class="bar-top"><span class="bar-label">🧪 Chemia</span><span class="bar-pct">25%</span></div>
+        <div class="bar-track"><div class="bar-fill low" style="width:25%"></div></div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:2rem">Czego uczysz się na praktykach?</div>
+    <div class="praktyki-grid">
+      <div class="praktyki-item"><span class="pi-icon">🔧</span> Obsługa maszyn stolarskich (piły, strugarki, frezarki)</div>
+      <div class="praktyki-item"><span class="pi-icon">📏</span> Pomiar i cięcie elementów wg projektu</div>
+      <div class="praktyki-item"><span class="pi-icon">🪚</span> Sklejanie, łączenie, montaż wyrobów</div>
+      <div class="praktyki-item"><span class="pi-icon">🎨</span> Szlifowanie i wykańczanie powierzchni</div>
+      <div class="praktyki-item"><span class="pi-icon">🖥️</span> Podstawy sterowania maszyną CNC</div>
+      <div class="praktyki-item"><span class="pi-icon">📋</span> Czytanie rysunków technicznych i projektów</div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-praca">
+    <div class="section-label">Typowy dzień pracy</div>
+    <div class="day-timeline">
+      <div class="day-item">
+        <div class="day-time">6:00 – 7:00</div>
+        <div class="day-desc">Przyjazd do zakładu, sprawdzenie planu produkcji na dziś, przygotowanie maszyn i materiałów.</div>
+      </div>
+      <div class="day-item">
+        <div class="day-time">7:00 – 10:00</div>
+        <div class="day-desc">Cięcie i obróbka elementów drewnianych wg rysunków technicznych. Praca przy pile tarczowej, strugarce lub frezarce.</div>
+      </div>
+      <div class="day-item">
+        <div class="day-time">10:00 – 10:20</div>
+        <div class="day-desc">Przerwa. Herbata, kanapki, pogaduszki w hali.</div>
+      </div>
+      <div class="day-item">
+        <div class="day-time">10:20 – 13:00</div>
+        <div class="day-desc">Sklejanie, montaż i łączenie elementów — praca przy stole montażowym lub maszynie CNC.</div>
+      </div>
+      <div class="day-item">
+        <div class="day-time">13:00 – 13:30</div>
+        <div class="day-desc">Obiad, przerwa.</div>
+      </div>
+      <div class="day-item">
+        <div class="day-time">13:30 – 15:00</div>
+        <div class="day-desc">Szlifowanie, lakierowanie lub bejcowanie gotowych elementów. Kontrola jakości, sprzątanie stanowiska.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Plusy i minusy</div>
+    <div class="pros-cons">
+      <div class="pros-card">
+        <div class="pc-header">Plusy</div>
+        <ul class="pc-list">
+          <li>Widoczny efekt pracy — tworzysz coś, co stoi i wytrzyma lata</li>
+          <li>Duży rynek pracy — stolarzy zawsze brakuje</li>
+          <li>Praca w większości bez biura i garnituru</li>
+          <li>Możliwość własnej działalności po kilku latach</li>
+          <li>Praca twórcza — projektujesz, interpretujesz, decydujesz</li>
+          <li>Coraz więcej zakładów z nowoczesnym CNC</li>
+        </ul>
+      </div>
+      <div class="cons-card">
+        <div class="pc-header">Minusy</div>
+        <ul class="pc-list">
+          <li>Trociny, pył i hałas — musisz pilnować BHP i ochrony dróg oddechowych</li>
+          <li>Praca stojąca, fizycznie wymagająca</li>
+          <li>Ryzyko urazów przy maszynach — wymaga skupienia</li>
+          <li>Zarobki na starcie nie powalają — trzeba czasu na awans</li>
+          <li>Latem w hali produkcyjnej potrafi być gorąco</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Dla kogo NIE jest ten zawód?</div>
+    <div class="not-for-you">
+      <h3>🚫 Ten zawód nie jest dla Ciebie, jeśli…</h3>
+      <ul>
+        <li>Jesteś uczulony na pył drzewny lub masz astmę — alergeny są na co dzień</li>
+        <li>Nie lubisz stać przez wiele godzin — to nie jest robota przy biurku</li>
+        <li>Boisz się maszyn lub masz problem z koncentracją — ryzyko urazu jest realne</li>
+        <li>Szukasz pracy całkowicie zdalnej lub biurowej</li>
+        <li>Nie lubisz brudzić się lub pracować w hałasie</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-kariera">
+    <div class="section-label">Ścieżka kariery i zarobki</div>
+    <div class="career-steps">
+      <div class="career-step">
+        <div class="step-left"><div class="step-num">1</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">Uczeń / stażysta</div>
+          <div class="step-desc">Szkoła branżowa + praktyki. Uczysz się na maszynach pod okiem mistrza.</div>
+          <span class="step-salary">brak / stypendium ~500 zł</span>
+        </div>
+      </div>
+      <div class="career-step">
+        <div class="step-left"><div class="step-num">2</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">Stolarz — pracownik produkcji</div>
+          <div class="step-desc">Pierwsze 1–3 lata po szkole. Wykonujesz zlecenia według dokumentacji.</div>
+          <span class="step-salary">3 500 – 4 500 zł brutto</span>
+        </div>
+      </div>
+      <div class="career-step">
+        <div class="step-left"><div class="step-num">3</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">Doświadczony stolarz / operator CNC</div>
+          <div class="step-desc">3–6 lat doświadczenia. Samodzielna praca, obsługa maszyn CNC, nadzór nad jakością.</div>
+          <span class="step-salary">4 500 – 6 500 zł brutto</span>
+        </div>
+      </div>
+      <div class="career-step">
+        <div class="step-left"><div class="step-num">4</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">Mistrz stolarski / brygadzista</div>
+          <div class="step-desc">Koordynujesz pracę zespołu, odpowiadasz za produkcję i szkolisz młodszych pracowników.</div>
+          <span class="step-salary">6 000 – 9 000 zł brutto</span>
+        </div>
+      </div>
+      <div class="career-step">
+        <div class="step-left"><div class="step-num">5</div><div class="step-line"></div></div>
+        <div class="step-body">
+          <div class="step-title">Własna działalność / zakład stolarski</div>
+          <div class="step-desc">Własna firma — meble na zamówienie, wykończenia wnętrz, eksport. Bez sufitu zarobków.</div>
+          <span class="step-salary">8 000 – 20 000+ zł netto</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Przyszłość zawodu</div>
+    <div class="future-card">
+      <h3>Jak stabilny jest ten zawód?</h3>
+      <div class="future-rating">
+        <span class="stars">★★★★☆</span>
+        <span class="future-label">Dobra perspektywa</span>
+      </div>
+      <p>Stolarz to zawód, który jest i będzie potrzebny — meble, okna, schody i wykończenia wnętrz zawsze będą w cenie. Rynek budowlany w Polsce systematycznie rośnie, a wykwalifikowanych stolarzy brakuje. Jednocześnie zawód się modernizuje — nowoczesne zakłady używają maszyn CNC i softwaru do projektowania 3D, co oznacza, że warto uczyć się technologii. Automatyzacja nie wyeliminuje stolarzy, ale podniesie wymagania co do obsługi maszyn.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.tab-panel');
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      const target = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => bar.style.width = target, 200);
+    });
+  });
+</script>
+</body>
+</html>
